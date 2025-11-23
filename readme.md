@@ -125,3 +125,5 @@ docker compose -f docker-compose.dev.yaml up -d
 ```
 
 ## 3. Other assumptions, If you are using it locally replaced all api with http://localhost:12000
+
+## 4. Other assumptions, If you are using it locally visit http://localhost:5173 to view the Webapp
