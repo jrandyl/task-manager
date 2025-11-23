@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=task-manager123
+      - POSTGRES_DB=task-manager
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: backend
+    ports:
+      - "12000:12000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=task-manager123
+      - POSTGRES_DB=task-manager
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_SSLMODE=disable
+    depends_on:
+      - postgres
+    command: ["air", "-c", ".air.toml"]
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:12000
+    restart: unless-stopped
+
+volumes:
+  db-data:
+

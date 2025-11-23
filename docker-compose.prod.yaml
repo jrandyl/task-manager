@@ -1,0 +1,68 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=task-manager123
+      - POSTGRES_DB=task-manager
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      proxy:
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: backend
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=task-manager123
+      - POSTGRES_DB=task-manager
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_SSLMODE=disable
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.backend.loadbalancer.server.port=11000"
+      - "traefik.http.routers.backend.rule=Host(`api.task-manager.jrcalderon.online`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=myresolver"
+    depends_on:
+      - postgres
+    networks:
+      proxy:
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=https://api.task-manager.jrcalderon.online
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
+      - "traefik.http.routers.frontend.rule=Host(`task-manager.jrcalderon.online`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=myresolver"
+    networks:
+      proxy:
+
+volumes:
+  db-data:
+
+networks:
+  proxy:
+    external: true
+
+

@@ -1,0 +1,11 @@
+[build]
+  bin = "main"
+  cmd = "go build -o main ./cmd/"
+  dir = "."
+  include_ext = ["go"]
+  exclude_dir = ["vendor"]
+  run_after_build = ["chmod +x main"]
+
+[log]
+  level = "debug"
+ keep_scroll = true
