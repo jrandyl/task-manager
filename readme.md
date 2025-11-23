@@ -123,3 +123,5 @@ docker compose -f docker-compose.dev.yaml up -d
 }
 
 ```
+
+## 3. Other assumptions, If you are using it locally replaced all api with http://localhost:12000
