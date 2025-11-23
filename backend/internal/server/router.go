@@ -20,7 +20,7 @@ func (s *Server) routes() http.Handler {
 
 	middleware := middleware.Use(
 		router,
-		middleware.CORS("https://task-manager.jrcalderon.online"),
+		middleware.CORS("http://localhost:5173"),
 		middleware.GzipMiddleware,
 		middleware.Logger,
 		middleware.Recover,
