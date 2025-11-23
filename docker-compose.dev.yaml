@@ -16,7 +16,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: backend
     ports:
-      - "12000:12000"
+      - "11000:11000"
     volumes:
       - ./backend:/app
     environment:
@@ -42,7 +42,7 @@ services:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:12000
+      - VITE_API_URL=http://localhost:11000
     restart: unless-stopped
 
 volumes:

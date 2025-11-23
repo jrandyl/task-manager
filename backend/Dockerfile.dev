@@ -12,6 +12,6 @@ COPY . .
 
 RUN apk add curl
 
-EXPOSE 12000
+EXPOSE 11000
 
 CMD ["air", "-c", ".air.toml"]
