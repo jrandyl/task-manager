@@ -6,3 +6,8 @@ export type Task = {
   created_at?: string | null;
   updated_at?: string | null;
 };
+
+export type NewTask = {
+  title: string;
+  description: string;
+};
